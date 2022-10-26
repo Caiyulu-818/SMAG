@@ -13,6 +13,7 @@ Soil MAGs were assembled from 3,463 soil metagenomes from 9 different ecosystems
 download from your browser: [https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu/MAG.tar.gz]
 
 <b>SMAG MAGs after dereplication (N=21077)</b>
+
 download from your browser:[https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu/MAGdrep.tar.gz]
 
 * All MAGs are estimated to be >50% complete and <10% contaminated
