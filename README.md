@@ -1,7 +1,7 @@
 # SMAG
 Soil microbial dark matter mining based on genome-resolved metagenomics 
 
-We constructed the SMAG from 3,463 soil metagenomes. If this repository is useful, please consider additionally citing the individual sources.
+We constructed the SMAG from 3,463 soil metagenomes from large-scale genome-resolved metagenomics to expand the genomic catalog of soil microbiomes !
 
 After download, all datasets can be unpacked using: `tar -xjvf <MAG.tar.gz>`
 
