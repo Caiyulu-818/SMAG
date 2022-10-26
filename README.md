@@ -16,4 +16,4 @@ download from your browser: [https://data.cyverse.org/dav-anon/iplant/home/lucyz
 download from your browser:[https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu/MAGdrep.tar.gz]
 
 * All MAGs are estimated to be >50% complete and <10% contaminated
-
+* The MAGs after dereplication meet or exceed the medium-quality level of the minimum information about a metagenome-assembled genome (MIMAG).
