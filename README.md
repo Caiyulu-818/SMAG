@@ -12,10 +12,11 @@ Soil MAGs were assembled from 3,463 soil metagenomes from 9 different ecosystems
 <b>SMAG MAGs (N=40,039)</b>   
 The SMAG catalog of the soil metagenomes, SNV catalogs and viruses predicted from SMAG for this publication are available at https://zenodo.org/deposit/7341720. To upload the large gz file, we split it into smaller file with the prefix "mag.tar.gz",
 downloaders can use the `cat ./mag.tar.gz* > mag.tar.gz; tar -xjvf <mag.tar.gz>` to process the MAGs.
-Also you can download the ccomplete file from your browser:[https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu/MAG.tar.gz]
 
 <b>SMAG MAGs after dereplication (N=21,077)</b>
-download from your browser:[https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu/MAGdrep.tar.gz]
+All the resource was deposited at cyverse [/iplant/home/lucyzju/Caiyu/]
 
 * All MAGs are estimated to be >= 50% complete and < 10% contaminated
 * The MAGs after dereplication meet or exceed the medium-quality level of the minimum information about a metagenome-assembled genome (MIMAG).
+
+* If you need to download please contact lucy20@zju.edu.cn for permission.
