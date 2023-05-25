@@ -221,6 +221,46 @@ prokka ./mag.fa ./mag.gff
 roary -e --mafft -i 90 -cd 90 -f  output_dir  *.gff
 
 
+#Crispr-cas system information
+
+##crispr array
+###contig filter
+conda activate pangenome
+for i in $(cat mag.list); do perl 0.casfind-1.pl /${i}.fa /2.5eur/${i}.3kb.fa /cas/${i}.temp;done
+
+###crispr array and protein prediction
+for i in $(cat mag.list);do pilercr -in /cas/${i}.temp -out /cas/${i}.spacer;done
+for i in $(cat mag.list);do prodigal -a /cas/$id.pep -i /cas/${i}.temp  -p single -f gff -o /cas/${i}.temp/$id.temp.gff;done
+
+### protein filter 10kb region of crispr array
+for i in $(cat mag.list);do perl 0.casfind-2.pl /cas/${i}.spacer /${i}.fa;done
+for i in $(cat mag.list);do perl 0.casfind-3.pl /cas/${i}.temp.gff /${i}.fa;done
+for i in $(cat mag.list);do bedtools intersect -wo -a /cas/${i}.temp.gff.loc -b /cas/${i}.spacer.loc > /cas/${i}.bed;done
+for i in $(cat mag.list);do perl 0.casfind-4.pl /cas/$id.temp.bed /cas/$id.pep /cas/$id.temp.pep.fasta /cas/$id.pep.cas.fasta /$id.fa;done
+
+##cas protein identification and alignment
+
+###du-replicated
+cd-hit -i /casdb/Casdb.fa -o /casdb/NR/Casdb.0.95.fa -c 0.95 -aS 0.9 -n 5 
+
+###filter protein length (200-1000aa)
+open(AA,"Casdb.fa");
+open(BB,">Casdb_filter.fa");
+while($line=<AA>)
+{  chomp $line;
+   $line2=<AA>;  chomp $line2;
+   $ll=$line2;
+   $len=length($ll);
+   if ($len>=200 & $len<=1000){
+   print BB $line,"\_L",length($line2),"\n",$line2,"\n";}
+}
+close AA; close BB;
+
+###(cas novelty) align to NR database
+/diamond blastp -k 1 -e 1e-10  --query-cover 40 -d /uniref_100.dmnd -q /casdb/NR/Casdb.0.95.fa -o /casdb/NR/CAS
+
+
+#Connecting MAGs to viruses
 #Linkages from Crispr-cas system information
 
 ##Remove MAGs containing fewer than four CRISPR-associated proteins.
@@ -254,10 +294,6 @@ seqkit seq -m 10000 MAG_cas.fa > MAG_cas10k.fa
 
 ##CRT crispr
 java -cp /application/CRT1.2-CLI.jar crt MAGnoderup_10k.part_030.fasta MAGnoderup_10k.part_030.out
-
-
-
-#Connecting MAGs to viruses
 ## Prediction
 virsorter2.sif run -w test -i mag.fa -j 4 all
 
