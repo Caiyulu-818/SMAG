@@ -255,11 +255,6 @@ seqkit seq -m 10000 MAG_cas.fa > MAG_cas10k.fa
 ##CRT crispr
 java -cp /application/CRT1.2-CLI.jar crt MAGnoderup_10k.part_030.fasta MAGnoderup_10k.part_030.out
 
-##spacer
-makeblastdb -in MAG_cas10k_minced_spacers_grep_norep.fa -dbtype nucl
-blastn -query GSV_2022.fasta -db MAG_cas10k_minced_spacers_grep_norep.fa -out MAG_cas10k_minced_spacers_grep_norep.out -outfmt 6 -num_threads 100 &
-awk '$5 <= 1 && $3>=95' MAG_cas10k_spacers_grepall_25.out > MAG_cas10k_spacers_grepall_25_demis.out
-
 
 
 #Connecting MAGs to viruses
@@ -268,6 +263,7 @@ virsorter2.sif run -w test -i mag.fa -j 4 all
 
 ## Quality Control
 checkv end_to_end input_file.fna output_directory -t 28
+
 
 ##prophage
 makeblastdb -in GSV_2022.fasta -dbtype nucl
