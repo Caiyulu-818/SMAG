@@ -171,3 +171,106 @@ python /BiG-SCAPE/bigscape.py \
 -o /BGC/BGC_class \
 -c 80 --cutoffs 0.3 --clan_cutoff 0.2 0.8 --mibig 
 
+#SNV catalog construction
+
+##01.snv-calling & shared-snp.list
+
+SPECIES=112.sp001002135
+
+GENOMES_DIR=/03.snv/101-150/genome
+PAIRS_IN=/03.snv/101-150/$SPECIES"_CATALOG"/input.tsv
+OUTPUT_DIR=/03.snv/101-150/$SPECIES"_CATALOG"
+OUTPUT_DIR2=/03.snv/101-150/$SPECIES"_CATALOG"/snps
+
+
+while IFS= read -r pair
+do
+            genome1=$(echo $pair | cut -d' ' -f1)
+            genome2=$(echo $pair | cut -d' ' -f2)
+
+                GB_PATH_1=$GENOMES_DIR/$genome1.fa
+                        GB_PATH_2=$GENOMES_DIR/$genome2.fa
+
+                            nucmer $GENOMES_DIR/$genome1.fa $GENOMES_DIR/$genome2.fa --prefix $OUTPUT_DIR/$genome1-$genome2
+                                delta-filter -q -r $OUTPUT_DIR/$genome1-$genome2.delta > $OUTPUT_DIR/$genome1-$genome2.filter.delta
+                                    show-coords $OUTPUT_DIR/$genome1-$genome2.filter.delta > $OUTPUT_DIR/$genome1-$genome2.coords
+                                        show-snps -Clr $OUTPUT_DIR/$genome1-$genome2.filter.delta > $OUTPUT_DIR2/$genome1-$genome2.snps
+                                            show-diff $OUTPUT_DIR/$genome1-$genome2.filter.delta > $OUTPUT_DIR/$genome1-$genome2.diff
+
+                                                echo "done whole genome alignment for $genome1 and $genome2"
+                                        done < $PAIRS_IN
+#get share snp List files
+ls $OUTPUT_DIR2 | grep snps | cut -d'.' -f1 | xargs -I[] bash -c 'sed "1,5d" '$OUTPUT_DIR2'/[].snps | awk "$0"' '$2 != "." && $3 != "." {printf "%s\t%s||%s||%s||%s\n", "[]", $14, $1, $2, $3}' | cut -f2 | LC_ALL=C sort -k2,2 -S20G --parallel=4 | uniq -c | awk '$1 > 1 {print $2}' > $SPECIES.snps.list
+
+##02.Snv catalog
+###method 1
+python3 generate_catalog_revised.py --shared 112.sp001002135.snps.list --in-list <(ls /03.snv/101-150/112.sp001002135_CATALOG/snps/*.snps) --out 112.sp001002135.catalog.tsv
+
+### method 2
+SNV_CATALOG.R
+
+#Pangenome construction
+## genomes selestion
+completeness>=80%
+contamination<=5%
+HQ genomes >=10 
+## fasta to gff (prokka v1.14.5)
+prokka ./mag.fa ./mag.gff
+
+## create a pangenome with a minimum amino acid identity at 90% (‘-i 90’) and a core gene defined at 90% presence (‘-cd 90’)
+roary -e --mafft -i 90 -cd 90 -f  output_dir  *.gff
+
+
+#Linkages from Crispr-cas system information
+
+##Remove MAGs containing fewer than four CRISPR-associated proteins.
+##https://github.com/sandialabs/CasCollect/tree/master/ref
+##Download all the hmm files of cas proteins
+prodigal -i mag10k.fa -a mag10k.faa -d mag10k.ffn -p meta -f gff > 
+hmmsearch -Z 1 --noali --cpu 10 --tblout Cas3_0_ID.out Cmr3_1_IIIB.hmm MAG_protein.faa
+
+##filter CRISPR-associated proteins >=4
+###R
+library(data.table)
+casout <- read.csv("cas.out",comment.char="#",sep="",header=F)
+casout <- casout[casout$V5<1e-5,]
+proteins <- unique(casout$V1)
+bins <- gsub("_\\S+","",proteins)
+count <- data.frame(table(bins))
+count <- count[count$Freq>=4,]
+data <- data.frame(bins,proteins)
+data <- data[data$bins%in%count$bins,]
+seqs <- unique(gsub("_\\d+$","",data$proteins))
+writeLines(seqs,"cas_bins_name.txt")
+
+##sequence grep
+/public/ylwang/seqkit grep -f cas_bins_name.txt MAG_renamecatall.fa > MAG_cas.fa
+
+##Contigs longer than 10 kb
+seqkit seq -m 10000 MAG_cas.fa > MAG_cas10k.fa
+
+##minced(0.4.2)
+/application/minced-0.4.2/minced -gffFull -spacers MAGnoderup_10k.part_001.fasta MAGnoderup_10k.part_001.txt MAGnoderup_10k.part_001.gff
+
+##CRT crispr
+java -cp /application/CRT1.2-CLI.jar crt MAGnoderup_10k.part_030.fasta MAGnoderup_10k.part_030.out
+
+
+#Connecting MAGs to viruses
+## Prediction
+virsorter2.sif run -w test -i mag.fa -j 4 all
+
+## Quality Control
+checkv end_to_end input_file.fna output_directory -t 28
+
+##Predict Hosts
+/WIsH/WIsH -c build -g /public/Public_Database/gtdb_genomes_reps_r95 -m modelDir 
+/WIsH/WIsH -c predict -g /Viral_database/GSV_3_final_1127.fasta.split/ -m modelDir/ -r /hosts_linkage/wishresult/GSV/ -b -t 208 
+
+
+
+
+ 
+
+
+
