@@ -230,13 +230,13 @@ for i in $(cat mag.list); do perl 0.casfind-1.pl /${i}.fa /2.5eur/${i}.3kb.fa /c
 
 ###crispr array and protein prediction
 for i in $(cat mag.list);do pilercr -in /cas/${i}.temp -out /cas/${i}.spacer;done
-for i in $(cat mag.list);do prodigal -a /cas/${i}.pep -i /cas/${i}.temp  -p single -f gff -o /cas/${i}.temp/$id.temp.gff;done
+for i in $(cat mag.list);do prodigal -a /cas/${i}.pep -i /cas/${i}.temp  -p single -f gff -o /cas/${i}.temp/${i}.temp.gff;done
 
 ### protein filter 10kb region of crispr array
 for i in $(cat mag.list);do perl 0.casfind-2.pl /cas/${i}.spacer /${i}.fa;done
 for i in $(cat mag.list);do perl 0.casfind-3.pl /cas/${i}.temp.gff /${i}.fa;done
 for i in $(cat mag.list);do bedtools intersect -wo -a /cas/${i}.temp.gff.loc -b /cas/${i}.spacer.loc > /cas/${i}.bed;done
-for i in $(cat mag.list);do perl 0.casfind-4.pl /cas/${i}.temp.bed /cas/$id.pep /cas/${i}.temp.pep.fasta /cas/${i}.pep.cas.fasta /${i}.fa;done
+for i in $(cat mag.list);do perl 0.casfind-4.pl /cas/${i}.temp.bed /cas/${i}.pep /cas/${i}.temp.pep.fasta /cas/${i}.pep.cas.fasta /${i}.fa;done
 
 ##cas protein identification and alignment
 
