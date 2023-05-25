@@ -255,6 +255,12 @@ seqkit seq -m 10000 MAG_cas.fa > MAG_cas10k.fa
 ##CRT crispr
 java -cp /application/CRT1.2-CLI.jar crt MAGnoderup_10k.part_030.fasta MAGnoderup_10k.part_030.out
 
+##spacer
+makeblastdb -in MAG_cas10k_minced_spacers_grep_norep.fa -dbtype nucl
+blastn -query GSV_2022.fasta -db MAG_cas10k_minced_spacers_grep_norep.fa -out MAG_cas10k_minced_spacers_grep_norep.out -outfmt 6 -num_threads 100 &
+awk '$5 <= 1 && $3>=95' MAG_cas10k_spacers_grepall_25.out > MAG_cas10k_spacers_grepall_25_demis.out
+
+
 
 #Connecting MAGs to viruses
 ## Prediction
@@ -263,10 +269,12 @@ virsorter2.sif run -w test -i mag.fa -j 4 all
 ## Quality Control
 checkv end_to_end input_file.fna output_directory -t 28
 
-##Predict Hosts
-/WIsH/WIsH -c build -g /public/Public_Database/gtdb_genomes_reps_r95 -m modelDir 
-/WIsH/WIsH -c predict -g /Viral_database/GSV_3_final_1127.fasta.split/ -m modelDir/ -r /hosts_linkage/wishresult/GSV/ -b -t 208 
-
+##prophage
+makeblastdb -in GSV_2022.fasta -dbtype nucl
+nohup blastn -query MAG_renamecatall.fa -db GSV_2022.fasta -out prophage.out -outfmt 6 -num_threads 200 &
+awk '$3 >90 && $4 > 500' prophage.out > prophage_500_90.out
+seqkit fx2tab -n -l GSV_2022.fasta > GSV_2022_nl.txt
+seqkit fx2tab -n -l MAG_renamecatall.fa > MAG_renamecatall_nl.txt
 
 
 
