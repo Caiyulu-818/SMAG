@@ -241,6 +241,7 @@ for i in $(cat mag.list);do perl 0.casfind-4.pl /cas/${i}.temp.bed /cas/${i}.pep
 ##cas protein identification and alignment
 
 ###du-replicated
+cat /cas/*.pep.cas.fasta > /casdb/Casdb.fa
 cd-hit -i /casdb/Casdb.fa -o /casdb/NR/Casdb.0.95.fa -c 0.95 -aS 0.9 -n 5 
 
 ###filter protein length (200-1000aa)
