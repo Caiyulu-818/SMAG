@@ -14,7 +14,10 @@ The SMAG catalog of the soil metagenomes, SNV catalogs and viruses predicted fro
 downloaders can use the `cat ./mag.tar.gz* > mag.tar.gz; tar -xjvf <mag.tar.gz>` to process the MAGs.
 
 <b>SMAG MAGs after dereplication (N=21,077)</b>
-All the resource was deposited at cyverse [/iplant/home/lucyzju/Caiyu/]
+All the 21,077 MAGs were deposited at [cyverse] (https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu_SMAG_catalog_2023/MAGdrep.tar.gz
+)
+All the 40,039 MAGs were deposited at [cyverse](https://data.cyverse.org/dav-anon/iplant/home/lucyzju/Caiyu_SMAG_catalog_2023/MAG.tar.gz)
+
 
 * All MAGs are estimated to be >= 50% complete and < 10% contaminated
 * The MAGs after dereplication meet or exceed the medium-quality level of the minimum information about a metagenome-assembled genome (MIMAG).
