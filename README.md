@@ -20,4 +20,4 @@ All the 40,039 MAGs were deposited at [cyverse] (https://data.cyverse.org/dav-an
 
 * All MAGs are estimated to be >= 50% complete and < 10% contaminated
 * The MAGs after dereplication meet or exceed the medium-quality level of the minimum information about a metagenome-assembled genome (MIMAG).
-* If you need to download please contact lucy20@zju.edu.cn for permission.
+* If you need more information please contact lucy20@zju.edu.cn.
