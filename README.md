@@ -5,14 +5,6 @@ We constructed the SMAG from 3,304 soil metagenomes from large-scale genome-reso
 
 After download, all datasets can be unpacked using: `cat ./mag.tar.gz* > mag.tar.gz; tar -xjvf <mag.tar.gz>`
 
-# Community-maintained download guide
-
-To facilitate systematic discovery and convenient access to high-quality MAG resources, Dr. Rui Li from the Beijing Institute of Genomics has created an open-source index project, [Awesome MAG] (https://github.com/inspirewind/awesome-mag)
-
-SMAG has been included in this project, together with a detailed download guide:(https://github.com/inspirewind/awesome-mag/blob/main/sources/smag/download.md)
-
-We thank Dr. Rui Li (lirui@big.ac.cn) for organizing and maintaining this helpful community resource.
-
 ## SMAG catalog
 
 Soil MAGs were assembled from 3,304 soil metagenomes from 9 different ecosystems across globe. All the MAGs were recovered for individual metagenomic assemblies using three different tools with default options: [Metabat (v2.12.1)](https://github.com/bioboxes/metaBAT), [MaxBin (v2.2.6)](https://github.com/movingpictures83/MaxBin), [CONCOCT (v1.0.0)](https://github.com/ConcoctLang/concoct), which all on the basis of tetranucleotide frequencies(TNF) and coverage information. The resulting MAGs were refined using the module ‘bin_refinement’ from [metaWRAP (v1.2.1)](https://github.com/bxlab/metaWRAP).
